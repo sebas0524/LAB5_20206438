@@ -83,7 +83,7 @@ public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.
         h.tvFrecuencia.setText("Cada " + m.getFrecuencia() + " hrs");
         h.tvTipo.setText(m.getTipo());
         h.tvDosis.setText(m.getDosis());
-        h.tvFechaInicio.setText(m.getFechaHoraInicio());
+        h.tvFechaInicio.setText(String.valueOf(m.getFechaHoraInicio()));
     }
 
     @Override

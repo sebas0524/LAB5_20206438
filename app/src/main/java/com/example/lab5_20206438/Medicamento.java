@@ -21,5 +21,5 @@ public class Medicamento implements Serializable {
     public int getFrecuencia() { return frecuencia; }
     public String getTipo() { return tipo; }
     public String getDosis() { return dosis; }
-    public CharSequence getFechaHoraInicio() { return fechaHoraInicio; }
+    public long getFechaHoraInicio() { return fechaHoraInicio; }
 }
