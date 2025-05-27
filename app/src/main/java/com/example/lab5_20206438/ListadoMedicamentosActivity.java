@@ -25,7 +25,7 @@ public class ListadoMedicamentosActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         lista = SharedPrefManager.cargarLista(this);
-        adapter = new MedicamentoAdapter(lista);
+        adapter = new MedicamentoAdapter(this,lista);
         recyclerView.setAdapter(adapter);
 
         Button btnAgregar = findViewById(R.id.btnAgregar);
