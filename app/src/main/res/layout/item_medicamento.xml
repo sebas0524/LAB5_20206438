@@ -1,0 +1,39 @@
+<!-- res/layout/item_medicamento.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:background="#E3F2FD"
+    android:marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/tvNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Paracetamol"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tvFrecuencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cada 8 hrs"/>
+
+    <TextView
+        android:id="@+id/tvTipo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tipo: Pastilla"/>
+    <TextView
+        android:id="@+id/tvDosis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dosis:1"/>
+    <TextView
+        android:id="@+id/tvFechaInicio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha de inicio:"/>
+
+</LinearLayout>
