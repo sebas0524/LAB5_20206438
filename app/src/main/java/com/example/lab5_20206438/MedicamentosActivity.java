@@ -47,4 +47,12 @@ public class MedicamentosActivity extends AppCompatActivity {
             SharedPrefManager.guardarLista(this, listaMedicamentos);
         }
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Vuelve a cargar la lista completa por si hubo cambios
+        listaMedicamentos.clear();
+        listaMedicamentos.addAll(SharedPrefManager.cargarLista(this));
+        adapter.notifyDataSetChanged();
+    }
 }

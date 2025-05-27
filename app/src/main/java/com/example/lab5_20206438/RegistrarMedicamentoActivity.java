@@ -3,6 +3,7 @@ package com.example.lab5_20206438;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -98,14 +99,31 @@ public class RegistrarMedicamentoActivity extends AppCompatActivity {
             return;
         }
 
-        Medicamento medicamento = new Medicamento(nombre, tipo, dosis, frecuencia, fechaHoraInicio.getTimeInMillis());
+        /*Medicamento medicamento = new Medicamento(nombre, tipo, dosis, frecuencia, fechaHoraInicio.getTimeInMillis());
 
         ArrayList<Medicamento> lista = SharedPrefManager.cargarLista(this);
         lista.add(medicamento);
         SharedPrefManager.guardarLista(this, lista);
 
         Toast.makeText(this, "Medicamento registrado", Toast.LENGTH_SHORT).show();
+        finish();*/
+        Medicamento medicamento = new Medicamento(nombre, tipo, dosis, frecuencia, fechaHoraInicio.getTimeInMillis());
+
+        // Guardar en SharedPreferences
+        ArrayList<Medicamento> lista = SharedPrefManager.cargarLista(this);
+        lista.add(medicamento);
+        SharedPrefManager.guardarLista(this, lista);
+
+        // Preparar resultado para retornar a MedicamentosActivity
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("medicamento", medicamento);
+        setResult(RESULT_OK, resultIntent);
+
+        Toast.makeText(this, "Medicamento registrado", Toast.LENGTH_SHORT).show();
         finish();
+
+
+
     }
 
 }
