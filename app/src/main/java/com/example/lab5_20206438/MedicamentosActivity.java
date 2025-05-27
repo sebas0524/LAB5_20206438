@@ -27,7 +27,7 @@ public class MedicamentosActivity extends AppCompatActivity {
 
         listaMedicamentos = SharedPrefManager.cargarLista(this);
 
-        adapter = new MedicamentoAdapter(listaMedicamentos);
+        adapter = new MedicamentoAdapter(this,listaMedicamentos);
         rvMedicamentos.setLayoutManager(new LinearLayoutManager(this));
         rvMedicamentos.setAdapter(adapter);
 

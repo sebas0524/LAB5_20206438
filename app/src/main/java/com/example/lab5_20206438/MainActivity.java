@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         // Cargar imagen desde internal storage
         Bitmap savedImage = StorageUtils.loadImageFromInternalStorage(this, "profile_image.png");
         if (savedImage != null) ivProfile.setImageBitmap(savedImage);
+
+        NotificacionUtils.crearCanalNotificacion(this);
+
     }
 
     @Override
