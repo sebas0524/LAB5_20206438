@@ -99,14 +99,6 @@ public class RegistrarMedicamentoActivity extends AppCompatActivity {
             return;
         }
 
-        /*Medicamento medicamento = new Medicamento(nombre, tipo, dosis, frecuencia, fechaHoraInicio.getTimeInMillis());
-
-        ArrayList<Medicamento> lista = SharedPrefManager.cargarLista(this);
-        lista.add(medicamento);
-        SharedPrefManager.guardarLista(this, lista);
-
-        Toast.makeText(this, "Medicamento registrado", Toast.LENGTH_SHORT).show();
-        finish();*/
         Medicamento medicamento = new Medicamento(nombre, tipo, dosis, frecuencia, fechaHoraInicio.getTimeInMillis());
 
         // Guardar en SharedPreferences

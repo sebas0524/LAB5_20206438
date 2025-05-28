@@ -33,9 +33,6 @@ public class ConfiguracionesActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MisPrefs", MODE_PRIVATE);
         etNombre.setText(prefs.getString("nombre", ""));
         etMensaje.setText(prefs.getString("mensaje", ""));
-        //String frecuenciaGuardada = prefs.getString("frecuencia", "8");
-        //int idx = adapter.getPosition(frecuenciaGuardada);
-        //spFrecuencia.setSelection(idx);
         int frecuenciaGuardada = prefs.getInt("frecuencia", 8);
         int idx = adapter.getPosition(String.valueOf(frecuenciaGuardada));
         spFrecuencia.setSelection(idx);
@@ -45,7 +42,6 @@ public class ConfiguracionesActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("nombre", etNombre.getText().toString());
             editor.putString("mensaje", etMensaje.getText().toString());
-            //editor.putString("frecuencia", spFrecuencia.getSelectedItem().toString());
             editor.putInt("frecuencia", Integer.parseInt(spFrecuencia.getSelectedItem().toString()));
             editor.apply();
             Toast.makeText(this, "Configuración guardada", Toast.LENGTH_SHORT).show();

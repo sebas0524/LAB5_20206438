@@ -100,12 +100,6 @@ public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.
         //h.tvFechaInicio.setText(String.valueOf(m.getFechaHoraInicio()));
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         h.tvFechaInicio.setText("Inicio: " + sdf.format(new Date(m.getFechaHoraInicio())));
-        /*h.ivEliminar.setOnClickListener(v -> {
-            lista.remove(pos);
-            notifyItemRemoved(pos);
-            guardarEnSharedPreferences();
-            Toast.makeText(context, "Medicamento eliminado", Toast.LENGTH_SHORT).show();
-        });*/
         h.ivEliminar.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
                     .setTitle("Eliminar medicamento")
@@ -127,11 +121,4 @@ public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.
     public int getItemCount() {
         return lista.size();
     }
-    /*private void guardarEnSharedPreferences() {
-        SharedPreferences prefs = context.getSharedPreferences("MisPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        Gson gson = new Gson();
-        editor.putString("medicamentos", gson.toJson(lista));
-        editor.apply();
-    }*/
 }

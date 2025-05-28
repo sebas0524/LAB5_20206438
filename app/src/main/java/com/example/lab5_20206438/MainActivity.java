@@ -1,5 +1,9 @@
 package com.example.lab5_20206438;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -9,6 +13,7 @@ import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +22,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        NotificacionUtils.crearCanalNotificacion(this);
 
         cargarConfiguraciones();
 
@@ -62,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         Bitmap savedImage = StorageUtils.loadImageFromInternalStorage(this, "profile_image.png");
         if (savedImage != null) ivProfile.setImageBitmap(savedImage);
 
-        NotificacionUtils.crearCanalNotificacion(this);
+        //NotificacionUtils.crearCanalNotificacion(this);
 
     }
 
@@ -87,36 +95,6 @@ public class MainActivity extends AppCompatActivity {
         cargarConfiguraciones(); // 👈 este método actualiza los datos mostrados
     }
 
-    /*private void cargarConfiguraciones() {
-        SharedPreferences prefs = getSharedPreferences("MisPrefs", MODE_PRIVATE);
-        String nombre = prefs.getString("nombre", "Usuario");
-        String mensaje = prefs.getString("mensaje", "¡Sigue adelante!");
-        int frecuencia;
-        try {
-            frecuencia = prefs.getInt("frecuencia", 8);
-        } catch (ClassCastException e) {
-            // Si fue guardado como String antes, intenta recuperarlo así
-            String freqStr = prefs.getString("frecuencia", "8");
-            frecuencia = Integer.parseInt(freqStr);
-
-            // Corregimos el valor en preferencias para evitar errores en el futuro
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("frecuencia", frecuencia);
-            editor.apply();
-        }
-
-        TextView tvNombre = findViewById(R.id.tvNombre);
-        TextView tvMensaje = findViewById(R.id.tvMensaje);
-        TextView tvFrecuencia = findViewById(R.id.tvFrecuencia);
-
-        tvNombre.setText("Hola, " + nombre);
-        tvMensaje.setText(mensaje);
-        tvFrecuencia.setText("Cada " + frecuencia + " horas");
-
-        // Reprogramar alarma si quieres aquí también
-        AlarmasUtils.programarAlarmaMedicamentos(this, frecuencia);
-        AlarmasUtils.programarAlarmaMotivacional(this);
-    }*/
     private void cargarConfiguraciones() {
         SharedPreferences prefs = getSharedPreferences("MisPrefs", MODE_PRIVATE);
         String nombre = prefs.getString("nombre", "Usuario");
@@ -139,7 +117,5 @@ public class MainActivity extends AppCompatActivity {
         AlarmasUtils.programarAlarmaMedicamentos(this, frecuencia);
         AlarmasUtils.programarAlarmaMotivacional(this);
     }
-
-
 
 }
