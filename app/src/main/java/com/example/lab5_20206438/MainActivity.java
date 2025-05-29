@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+/*public class MainActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView ivFoto;
@@ -165,4 +165,148 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+}*/
+public class MainActivity extends AppCompatActivity {
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 100;
+
+    private ImageView ivFoto;
+    private TextView tvSaludo, tvMotivacion;
+    private SharedPreferences prefs;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ivFoto = findViewById(R.id.ivFoto);
+        tvSaludo = findViewById(R.id.tvSaludo);
+        tvMotivacion = findViewById(R.id.tvMotivacion);
+        prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+
+        // Solicitar permisos primero
+        solicitarPermisoNotificaciones();
+
+        crearCanalesNotificacion();
+        cargarDatos();
+
+        ivFoto.setOnClickListener(v -> abrirGaleria());
+
+        findViewById(R.id.btnVerMedicamentos).setOnClickListener(v ->
+                startActivity(new Intent(this, MedicamentosActivity.class)));
+
+        findViewById(R.id.btnConfiguraciones).setOnClickListener(v ->
+                startActivity(new Intent(this, ConfiguracionesActivity.class)));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Recargar datos cuando volvemos de ConfiguracionesActivity
+        cargarDatos();
+    }
+
+    private void solicitarPermisoNotificaciones() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        REQUEST_NOTIFICATION_PERMISSION);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permiso concedido, programar notificaciones si es necesario
+                Toast.makeText(this, "Permisos de notificación concedidos", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Se necesitan permisos de notificación para las alertas", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void cargarDatos() {
+        String nombre = prefs.getString("nombre", "Usuario");
+        String mensaje = prefs.getString("mensaje", "¡Hoy es un buen día para cuidar tu salud!");
+
+        tvSaludo.setText("¡Hola, " + nombre + "!");
+        tvMotivacion.setText(mensaje);
+
+        // Cargar imagen de perfil
+        try {
+            File file = new File(getFilesDir(), "perfil.jpg");
+            if (file.exists()) {
+                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+                ivFoto.setImageBitmap(bitmap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirGaleria() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            Uri imageUri = data.getData();
+            ivFoto.setImageURI(imageUri);
+
+            // Guardar imagen en almacenamiento interno
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                FileOutputStream fos = openFileOutput("perfil.jpg", MODE_PRIVATE);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos);
+                fos.close();
+                inputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void crearCanalesNotificacion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = getSystemService(NotificationManager.class);
+
+            // Canal para notificaciones motivacionales
+            NotificationChannel canalMotivacion = new NotificationChannel(
+                    "motivacion",
+                    "Notificaciones Motivacionales",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            canalMotivacion.setDescription("Mensajes motivacionales personalizados");
+            canalMotivacion.enableVibration(true);
+            canalMotivacion.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            manager.createNotificationChannel(canalMotivacion);
+
+            // Canales para medicamentos
+            crearCanal(manager, "pastilla", "Pastillas", NotificationManager.IMPORTANCE_HIGH);
+            crearCanal(manager, "jarabe", "Jarabes", NotificationManager.IMPORTANCE_HIGH);
+            crearCanal(manager, "ampolla", "Ampollas", NotificationManager.IMPORTANCE_MAX);
+            crearCanal(manager, "capsula", "Cápsulas", NotificationManager.IMPORTANCE_HIGH);
+            crearCanal(manager, "inyeccion", "Inyecciones", NotificationManager.IMPORTANCE_MAX);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void crearCanal(NotificationManager manager, String id, String nombre, int importancia) {
+        NotificationChannel canal = new NotificationChannel(id, nombre, importancia);
+        canal.enableVibration(true);
+        canal.setDescription("Notificaciones para " + nombre);
+        manager.createNotificationChannel(canal);
+    }
 }
