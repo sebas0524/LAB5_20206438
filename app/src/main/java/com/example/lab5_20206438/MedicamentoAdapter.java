@@ -1,124 +1,96 @@
 package com.example.lab5_20206438;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-/*import java.util.ArrayList;
-
-public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.ViewHolder> {
-
-    private final ArrayList<Medicamento> lista;
-
-    public MedicamentoAdapter(ArrayList<Medicamento> lista) {
-        this.lista = lista;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombre, tvFrecuencia, tvTipo;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            tvNombre = itemView.findViewById(R.id.tvNombre);
-            tvFrecuencia = itemView.findViewById(R.id.tvFrecuencia);
-            tvTipo = itemView.findViewById(R.id.tvTipo);
-        }
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_medicamento, parent, false);
-        return new ViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder h, int pos) {
-        Medicamento m = lista.get(pos);
-        h.tvNombre.setText(m.getNombre());
-        h.tvFrecuencia.setText("Cada " + m.getFrecuencia() + " hrs");
-        h.tvTipo.setText(m.getTipo());
-    }
-
-    @Override
-    public int getItemCount() {
-        return lista.size();
-    }
-}*/
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.ViewHolder> {
+    private List<Medicamento> lista;
+    private Context context;
+    private SharedPreferences prefs;
+    private Gson gson = new Gson();
 
-    private final ArrayList<Medicamento> lista;
-    private final Context context;
-
-    public MedicamentoAdapter(Context context,ArrayList<Medicamento> lista) {
+    public MedicamentoAdapter(Context context, List<Medicamento> lista) {
         this.context = context;
         this.lista = lista;
+        this.prefs = context.getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombre, tvFrecuencia, tvTipo, tvDosis, tvFechaInicio;
-        ImageView ivEliminar;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            tvNombre = itemView.findViewById(R.id.tvNombre);
-            tvFrecuencia = itemView.findViewById(R.id.tvFrecuencia);
-            tvTipo = itemView.findViewById(R.id.tvTipo);
-            tvDosis =itemView.findViewById(R.id.tvDosis);
-            tvFechaInicio = itemView.findViewById(R.id.tvFechaInicio);
-            ivEliminar = itemView.findViewById(R.id.ivEliminar);
-        }
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_medicamento, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_medicamento, parent, false);
-        return new ViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder h, int pos) {
-        Medicamento m = lista.get(pos);
-        h.tvNombre.setText(m.getNombre());
-        h.tvFrecuencia.setText("Cada " + m.getFrecuencia() + " horas");
-        h.tvTipo.setText("Tipo: " + m.getTipo());
-        h.tvDosis.setText("Dosis: " + m.getDosis());
-        //h.tvFechaInicio.setText(String.valueOf(m.getFechaHoraInicio()));
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-        h.tvFechaInicio.setText("Inicio: " + sdf.format(new Date(m.getFechaHoraInicio())));
-        h.ivEliminar.setOnClickListener(v -> {
-            new AlertDialog.Builder(context)
-                    .setTitle("Eliminar medicamento")
-                    .setMessage("¿Estás seguro de que deseas eliminar este medicamento?")
-                    .setPositiveButton("Sí", (dialog, which) -> {
-                        lista.remove(pos);
-                        notifyItemRemoved(pos);
-                        notifyItemRangeChanged(pos, lista.size());
-                        SharedPrefManager.guardarLista(context, lista); // Guardar cambios
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Medicamento m = lista.get(position);
+        holder.tvNombre.setText(m.getNombre());
+        holder.tvTipo.setText("Tipo: " + m.getTipo());
+        holder.tvDosis.setText("Dosis: " + m.getDosis());
+        holder.tvFrecuencia.setText("Cada " + m.getFrecuenciaHoras() + " horas");
+        holder.tvFechaHora.setText("Inicio: " + m.getFechaHoraInicio());
+        holder.btnEliminar.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+                new AlertDialog.Builder((Activity) context)
+                        .setTitle("Eliminar medicamento")
+                        .setMessage("¿Estás seguro de que querés eliminar este medicamento?")
+                        .setPositiveButton("Sí", (dialog, which) -> {
+                            lista.remove(pos);
+                            notifyItemRemoved(pos);
+                            guardarMedicamentos();
+                            Toast.makeText(context, "Medicamento eliminado", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("Cancelar", null)
+                        .show();
+            }
         });
 
-    }
 
+    }
 
     @Override
     public int getItemCount() {
         return lista.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView tvNombre, tvTipo, tvDosis, tvFrecuencia, tvFechaHora;
+        ImageButton btnEliminar;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            tvNombre = itemView.findViewById(R.id.tvNombre);
+            tvTipo = itemView.findViewById(R.id.tvTipo);
+            tvDosis = itemView.findViewById(R.id.tvDosis);
+            tvFrecuencia = itemView.findViewById(R.id.tvFrecuencia);
+            tvFechaHora = itemView.findViewById(R.id.tvFechaHora);
+            btnEliminar = itemView.findViewById(R.id.btnEliminar);
+        }
+    }
+    private void guardarMedicamentos() {
+        String json = gson.toJson(lista);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("medicamentos", json);
+        editor.apply();
     }
 }

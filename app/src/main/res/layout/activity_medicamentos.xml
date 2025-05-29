@@ -1,30 +1,78 @@
-<!-- res/layout/activity_medicamentos.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="#F5F5F5">
 
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mis Medicamentos"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:layout_marginBottom="12dp"/>
+    <!-- Header con título y flecha de regreso -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="#2BA3A3"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:id="@+id/header">
 
+        <ImageButton
+            android:id="@+id/btnRegresar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            android:contentDescription="Regresar"
+            app:tint="@android:color/white" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Lista de Medicamentos"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp" />
+    </LinearLayout>
+
+    <!-- RecyclerView debajo del header -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMedicamentos"
+        android:layout_below="@id/header"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:clipToPadding="false" />
 
-    <Button
-        android:id="@+id/btnAgregar"
-        android:layout_width="match_parent"
+    <!-- FAB flotante abajo a la derecha -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAgregarMedicamento"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registrar nuevo medicamento"
-        android:backgroundTint="#2BA3A3"
-        android:textColor="@android:color/white"/>
-</LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="24dp"
+        android:contentDescription="Agregar medicamento"
+        app:backgroundTint="#2BA3A3"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+</RelativeLayout>
+
+    <!--LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:padding="16dp"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnNuevo"
+            android:text="Registrar nuevo medicamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMedicamentos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout-->
+

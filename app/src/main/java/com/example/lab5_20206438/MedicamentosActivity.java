@@ -1,58 +1,66 @@
 package com.example.lab5_20206438;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Button;
+import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MedicamentosActivity extends AppCompatActivity {
 
-    private RecyclerView rvMedicamentos;
+    private RecyclerView rv;
     private MedicamentoAdapter adapter;
-    private ArrayList<Medicamento> listaMedicamentos;
+    private List<Medicamento> lista;
+    private SharedPreferences prefs;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medicamentos);
 
-        rvMedicamentos = findViewById(R.id.rvMedicamentos);
-        Button btnAgregar = findViewById(R.id.btnAgregar);
+        gson = new Gson();
+        prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+        rv = findViewById(R.id.rvMedicamentos);
+        rv.setLayoutManager(new LinearLayoutManager(this));
 
-        listaMedicamentos = SharedPrefManager.cargarLista(this);
+        lista = cargarMedicamentos();
+        adapter = new MedicamentoAdapter(this,lista);
+        rv.setAdapter(adapter);
 
-        adapter = new MedicamentoAdapter(this,listaMedicamentos);
-        rvMedicamentos.setLayoutManager(new LinearLayoutManager(this));
-        rvMedicamentos.setAdapter(adapter);
-
-        btnAgregar.setOnClickListener(v -> {
-            Intent intent = new Intent(this, RegistrarMedicamentoActivity.class);
-            startActivityForResult(intent, 1);
+        findViewById(R.id.fabAgregarMedicamento).setOnClickListener(v -> {
+            Intent i = new Intent(this, RegistroMedicamentoActivity.class);
+            startActivity(i);
         });
+        findViewById(R.id.btnRegresar).setOnClickListener(v -> finish());
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            Medicamento nuevo = (Medicamento) data.getSerializableExtra("medicamento");
-            listaMedicamentos.add(nuevo);
-            adapter.notifyItemInserted(listaMedicamentos.size() - 1);
-            SharedPrefManager.guardarLista(this, listaMedicamentos);
-        }
+    private List<Medicamento> cargarMedicamentos() {
+        String json = prefs.getString("medicamentos", "");
+        if (json.isEmpty()) return new ArrayList<>();
+        Type tipoLista = new TypeToken<List<Medicamento>>(){}.getType();
+        return gson.fromJson(json, tipoLista);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        // Vuelve a cargar la lista completa por si hubo cambios
-        listaMedicamentos.clear();
-        listaMedicamentos.addAll(SharedPrefManager.cargarLista(this));
+        lista.clear();
+        lista.addAll(cargarMedicamentos());
         adapter.notifyDataSetChanged();
+
+        if (lista.isEmpty()) {
+            Toast.makeText(this, "No hay medicamentos registrados", Toast.LENGTH_LONG).show();
+        }
     }
 }

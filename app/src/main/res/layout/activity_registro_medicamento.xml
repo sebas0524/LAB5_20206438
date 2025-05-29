@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#FDF5FF"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Barra superior -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#2AB1A4"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:elevation="4dp" />
+
+    <!-- Contenido Scroll -->
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:background="#FDF5FF">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etNombre"
+                android:hint="Nombre del Medicamento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"/>
+
+            <Spinner
+                android:id="@+id/spTipo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_edittext"/>
+
+            <EditText
+                android:id="@+id/etFrecuencia"
+                android:hint="Frecuencia (horas)"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp"
+                android:layout_marginTop="12dp"/>
+
+            <EditText
+                android:id="@+id/etDosis"
+                android:hint="Dosis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp"
+                android:layout_marginTop="12dp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_edittext">
+
+                <EditText
+                    android:id="@+id/etFechaHora"
+                    android:hint="Fecha de Inicio"
+                    android:focusable="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:drawableEnd="@drawable/ic_calendar"
+                    android:background="@android:color/transparent"/>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btnGuardar"
+                android:text="Guardar Medicamento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="#2AB1A4"
+                android:textColor="#FFFFFF"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
+
+
+    <!--ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etNombre"
+                android:hint="Nombre del medicamento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Spinner
+                android:id="@+id/spTipo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
+
+            <EditText
+                android:id="@+id/etDosis"
+                android:hint="Dosis (ej. 1 tableta)"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
+
+            <EditText
+                android:id="@+id/etFrecuencia"
+                android:hint="Frecuencia en horas (ej. 8)"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
+
+            <EditText
+                android:id="@+id/etFechaHora"
+                android:hint="Fecha y hora de inicio"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
+
+            <Button
+                android:id="@+id/btnGuardar"
+                android:text="Guardar"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </ScrollView!-->
