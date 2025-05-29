@@ -14,30 +14,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-/*public class MotivacionReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        SharedPreferences prefs = context.getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
-        String mensaje = prefs.getString("mensaje", "¡Sigue adelante!");
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "motivacion")
-                .setSmallIcon(R.drawable.ic_motivacional)
-                .setContentTitle("Motivación diaria")
-                .setContentText(mensaje)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-        }
-
-        notificationManager.notify(1002, builder.build());
-    }
-}*/
 
 public class MotivacionReceiver extends BroadcastReceiver {
 
@@ -55,10 +31,9 @@ public class MotivacionReceiver extends BroadcastReceiver {
         String mensaje = prefs.getString("mensaje", "¡Sigue adelante!");
         String nombre = prefs.getString("nombre", "");
 
-        // Personalizar el mensaje si hay nombre
+
         String tituloNotificacion = nombre.isEmpty() ? "Motivación diaria" : "¡Hola " + nombre + "!";
 
-        // Intent para abrir la app cuando se toque la notificación
         Intent mainIntent = new Intent(context, MainActivity.class);
         mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -84,7 +59,6 @@ public class MotivacionReceiver extends BroadcastReceiver {
         try {
             notificationManager.notify(1002, builder.build());
         } catch (SecurityException e) {
-            // En caso de que no tengamos permisos
             e.printStackTrace();
         }
     }

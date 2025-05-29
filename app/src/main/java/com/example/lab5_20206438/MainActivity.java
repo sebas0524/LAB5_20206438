@@ -34,138 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 
-/*public class MainActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView ivFoto;
-    private TextView tvSaludo, tvMotivacion;
-    private SharedPreferences prefs;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        ivFoto = findViewById(R.id.ivFoto);
-        tvSaludo = findViewById(R.id.tvSaludo);
-        tvMotivacion = findViewById(R.id.tvMotivacion);
-        prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
-
-        cargarDatos();
-        crearCanalesNotificacion();
-        crearCanalMotivacion();
-        programarMotivacionDiaria();
-
-
-        ivFoto.setOnClickListener(v -> abrirGaleria());
-
-        findViewById(R.id.btnVerMedicamentos).setOnClickListener(v ->
-                startActivity(new Intent(this, MedicamentosActivity.class)));
-
-        findViewById(R.id.btnConfiguraciones).setOnClickListener(v ->
-                startActivity(new Intent(this, ConfiguracionesActivity.class)));
-    }
-
-    private void cargarDatos() {
-        String nombre = prefs.getString("nombre", "Valeria");
-        String mensaje = prefs.getString("mensaje", "¡Hoy es un buen día para cuidad tu salud!");
-        tvSaludo.setText("¡Hola, " + nombre + "!");
-        tvMotivacion.setText(mensaje);
-
-        try {
-            File file = new File(getFilesDir(), "perfil.jpg");
-            if (file.exists()) {
-                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
-                ivFoto.setImageBitmap(bitmap);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void abrirGaleria() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
-            ivFoto.setImageURI(imageUri);
-
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(imageUri);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                FileOutputStream fos = openFileOutput("perfil.jpg", MODE_PRIVATE);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    private void crearCanalMotivacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    "motivacion",
-                    "Notificaciones Motivacionales",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.enableVibration(true);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-    }
-    private void crearCanalesNotificacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager manager = getSystemService(NotificationManager.class);
-
-            // Canales para medicamentos
-            crearCanal(manager, "pastilla", "Pastillas", NotificationManager.IMPORTANCE_HIGH);
-            crearCanal(manager, "jarabe", "Jarabes", NotificationManager.IMPORTANCE_HIGH);
-            crearCanal(manager, "ampolla", "Ampollas", NotificationManager.IMPORTANCE_MAX);
-            crearCanal(manager, "capsula", "Cápsulas", NotificationManager.IMPORTANCE_HIGH);
-            crearCanal(manager, "inyeccion", "Inyecciones", NotificationManager.IMPORTANCE_MAX);
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void crearCanal(NotificationManager manager, String id, String nombre, int importancia) {
-        NotificationChannel canal = new NotificationChannel(id, nombre, importancia);
-        canal.enableVibration(true);
-        canal.setDescription("Notificaciones para " + nombre);
-        manager.createNotificationChannel(canal);
-    }
-
-
-    private void programarMotivacionDiaria() {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent intent = new Intent(this, MotivacionReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1001, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-
-        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-        }
-
-        alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent
-        );
-    }
-
-
-}*/
 public class MainActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -185,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         tvMotivacion = findViewById(R.id.tvMotivacion);
         prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
 
-        // Solicitar permisos primero
         solicitarPermisoNotificaciones();
 
         crearCanalesNotificacion();
@@ -203,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recargar datos cuando volvemos de ConfiguracionesActivity
         cargarDatos();
     }
 
@@ -232,13 +99,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void cargarDatos() {
-        String nombre = prefs.getString("nombre", "Usuario");
+        String nombre = prefs.getString("nombre", "Valeria");
         String mensaje = prefs.getString("mensaje", "¡Hoy es un buen día para cuidar tu salud!");
 
         tvSaludo.setText("¡Hola, " + nombre + "!");
         tvMotivacion.setText(mensaje);
 
-        // Cargar imagen de perfil
         try {
             File file = new File(getFilesDir(), "perfil.jpg");
             if (file.exists()) {
@@ -263,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
             Uri imageUri = data.getData();
             ivFoto.setImageURI(imageUri);
 
-            // Guardar imagen en almacenamiento interno
             try {
                 InputStream inputStream = getContentResolver().openInputStream(imageUri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
@@ -282,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = getSystemService(NotificationManager.class);
 
-            // Canal para notificaciones motivacionales
             NotificationChannel canalMotivacion = new NotificationChannel(
                     "motivacion",
                     "Notificaciones Motivacionales",
